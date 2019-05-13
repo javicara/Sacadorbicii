@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    
+    <script type="text/javascript" src="js/jquery-3.4.0.min.js" ></script>
+    <script type="text/javascript" src="js/bootstrap.js" ></script>
+    <title>Sacador bicis </title>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h1>PROGRAM BICIS</h1>
+        <input type="search" id="linkCraiglist" class="form-control"placeholder="link craiglist" >
+        <br>    
+        <input type="search" id="linkTuvalum" class="form-control"placeholder="link tuvalum" >
+        <br>  
+        <button class="btn btn-primary" id="boton" onclick="boton()">Buscar</button>
+        <br>
+        <br>
+        <span >Busquedas recientes: </span> 
+        <ul id="listabusquedas">
+            
+        </ul>
+    </div>
+
+
+
+    <div class="container mt-5">
+        <table class="table">
+
+            <thead>
+
+                <tr>    
+
+                    <th scope="col">
+                        Titulo  
+                    </th>
+                    <th scope="col">
+                        Marca  
+                    </th>
+                    <th scope="col">
+                        imagenes  
+                    </th>
+                    <th scope="col">
+                        descripcion  
+                    </th>
+                    <th scope="col">
+                        precio  
+                    </th>   
+
+
+                </tr>
+
+
+
+            </thead>
+            <tbody id="res">
+
+
+
+
+            </tbody>
+
+
+
+        </table>
+
+
+    </div>
+
+
+    <script src="./index.js"></script>
+ <!-- y finaliza por  <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5cc6ab100ff462001290db0f&product=sticky-share-buttons' async='async'></script>
+ -->
+</body>
+
+</html>
