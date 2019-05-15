@@ -3,11 +3,12 @@ const fs = require('fs');
 const request = require('request');
 
 let images = [];
+let arrayDatosTec=[];
 
 
-request('https://tuvalum.com/comprar/bicicleta-pinarello-25175', (err, res, body) => {
+request('https://tuvalum.com/comprar/bicicleta-bh-43513', (err, res, body) => {
     if (!err && res.statusCode == 200) {
-        let $ = cheerio.load(body);
+        var $ = cheerio.load(body);
         let tituloCompleto = $('h1', '#name-container');
         let marca = $('strong', 'h1.card-name');
         let anio = $('span', 'h1.card-name');
@@ -15,7 +16,7 @@ request('https://tuvalum.com/comprar/bicicleta-pinarello-25175', (err, res, body
         let precioOferta = $('h3', '.flex-row');
         let sacaTalle = $('div.product-attribute', 'div.col-sm-12');
         var talle = sacaTalle.text().replace('vendedor', 'dueño');//
-        $('.product-image', 'div.item').each(function () {
+      /*  $('.product-image', 'div.item').each(function () {
 
 
             var urlImg = $(this).attr('style');
@@ -36,7 +37,8 @@ request('https://tuvalum.com/comprar/bicicleta-pinarello-25175', (err, res, body
             }
         });
         console.log(tituloCompleto.text() + ' Talle: ' + talle + ' PRECIO: $' + precioOferta.text() + ' ANTES: $' + precioAntes.text());
-
+/*/
+        sacainfo();
     }
     else {
         // console.log( res.statusCode );
@@ -46,6 +48,18 @@ request('https://tuvalum.com/comprar/bicicleta-pinarello-25175', (err, res, body
 
 
     }
+
+
+function sacainfo(){
+    let datosTecnicos =$('span','#datos-tecnicos').each(function(){
+        arrayDatosTec.push(datosTecnicos.text());
+    });
+    
+    console.log(arrayDatosTec);
+    
+}
+
+
 })
 
 
