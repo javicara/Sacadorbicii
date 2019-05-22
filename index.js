@@ -3,7 +3,9 @@ const fs = require('fs');
 const request = require('request');
 
 let images = [];
+const baseUrl='https://tuvalum.com';
 
+var linkPrueba=baseUrl+'/comprar/bicicleta-berria-44805';
 
 /*request('https://tuvalum.com/comprar/bicicleta-pinarello-25175', (err, res, body) => {
     if (!err && res.statusCode == 200) {
@@ -47,12 +49,13 @@ let images = [];
 
     }
 })/*/
-favoritos();
+/*favoritos()
 
 function favoritos (){
-    request('https://tuvalum.com/ofertas?appbundle_filter%5Btext%5D=&appbundle_filter%5Btype%5D=1&appbundle_filter%5Bcategory%5D=2&precio_min=1000&precio_max=4000&appbundle_filter%5Bextra_form%5D%5Bbrand%5D=&appbundle_filter%5Bextra_form%5D%5Bmaterial%5D%5B%5D=2&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=22&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=30&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=31&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=32&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=33&appbundle_filter%5Bextra_form%5D%5BmainGroup%5D=&ofertas=1&ofertas=1&appbundle_filter%5B_token%5D=vUTGO2M_fA_zX1g4JfQiizbGaOZMqdqnJD_CZLB_wdg', (err, res, body) => {
-    if (!err && res.statusCode == 200) {
-        let $ = cheerio.load(body);
+    url = 'https://tuvalum.com/ofertas?appbundle_filter%5Btext%5D=&appbundle_filter%5Btype%5D=1&appbundle_filter%5Bcategory%5D=2&precio_min=1000&precio_max=4000&appbundle_filter%5Bextra_form%5D%5Bbrand%5D=&appbundle_filter%5Bextra_form%5D%5Bmaterial%5D%5B%5D=2&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=22&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=30&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=31&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=32&appbundle_filter%5Bextra_form%5D%5Bsize%5D%5B%5D=33&appbundle_filter%5Bextra_form%5D%5BmainGroup%5D=&ofertas=1&ofertas=1&appbundle_filter%5B_token%5D=vUTGO2M_fA_zX1g4JfQiizbGaOZMqdqnJD_CZLB_wdg', (err, res, body) => {
+
+     axios.get(url).then(response =>{
+        let $ = cheerio.load(response);
         const itemsFavoritos = $('.grid-container .card').toArray()
         .map(item=>{
             const $item= $(item);
@@ -63,18 +66,60 @@ function favoritos (){
                     link:$item.find('.input-block').first().attr('href'),
                     talle:$item.find(".card-attributes small:contains('Talla')").children().text(),
                     //precioVenta:Number($item.find('.actual-price').text())+1500,//queda mal pq me toma el . por ,
+                    
                 };
+                debugger;
              return itemsFavoritos
-        })
-        debugger;
+             
+
+        }).then(itemsFavoritos => {
+            console.log('finish!');
+            fs.writeFile('./items.json', JSON.stringify(itemsFavoritos), 'utf8', function(error) {
+                if (error) return console.log('error', error);
+                console.log(itemsFavoritos.length, 'items saved');
+            });
+        
+        
+        });
+    }
+
+        )
 
     }
-    else{
-        // console.log( res.statusCode );
-        console.log(res);
-        console.log(err);
-    }
-
 }
-    )}
+*/
 
+
+
+function sacaLinksfotos(linkString){
+        request(linkString, (err, res, body) => {
+            let $ = cheerio.load(body);    
+            let tituloCompleto = $('h1', '#name-container');// solo por control y para el nombre de la carpeta
+            $('.product-image', 'div.item').each(function () {
+
+
+                var urlImg = $(this).attr('style');
+                var spliteado = urlImg.split(["'"])[1];
+                //console.log(urlImg);
+                console.log(spliteado);//DEVUEVLE TODOS LOS LINKS DE LAS IMAGENES DE TUVALUM
+                images.push(spliteado);// arreglo con los links de las imagenes 
+                rutaCarpeta= '../../BICIS DRIVE/'+tituloCompleto.text();// VA A DOCUMENTOS / BICIS DRIVE 
+                var dir = rutaCarpeta// crea el directorio y le guarda las imagenes
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                }
+                for (let i = 0; i < images.length; i++) {
+                    if (images[i]) {
+                        request(images[i]).pipe(fs.createWriteStream(dir+`/photo_${i}.jpg`))
+                    }
+    
+                }
+            });
+            debugger;
+
+        })  
+
+};
+
+
+sacaLinksfotos('https://tuvalum.com/comprar/bicicleta-bmc-43330');
